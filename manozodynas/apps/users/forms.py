@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
+
 
 class LoginForm(forms.Form):
     username = forms.CharField()
@@ -13,6 +14,8 @@ class LoginForm(forms.Form):
 
         user = authenticate(**cleaned_data)
         if not user:
-            raise forms.ValidationError(_('Username or password is incorrect'))
+            raise forms.ValidationError(
+                ugettext('Username or password is incorrect')
+            )
         cleaned_data['user'] = user
         return cleaned_data

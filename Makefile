@@ -1,15 +1,25 @@
-.PHONY: prepare_env run test
+.PHONY: run test
 
-prepare_env:
-	python bootstrap.py
-	bin/buildout
-	mkdir var || touch var/db
-	bin/django syncdb --noinput
-	bin/django migrate manozodynas
+all: bin/django var/db
 
-run:
-	bin/django migrate manozodynas
+run: bin/django var/db
 	bin/django runserver
 
-test:
+test: bin/django
 	bin/django test
+
+bin/buildout:
+	python bootstrap.py --version 2.2.5
+
+bin/django: bin/buildout buildout.cfg setup.py
+	bin/buildout
+
+buildout.cfg:
+	printf '[buildout]\nextends = config/env/development.cfg\n' > buildout.cfg
+
+var:
+	mkdir var
+
+var/db: var
+	bin/django syncdb --noinput --all
+	bin/django migrate --fake
