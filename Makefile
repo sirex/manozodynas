@@ -1,7 +1,6 @@
 .PHONY: prepare_env run test
 
 prepare_env:
-	rm -fr ~/.buildout
 	python ez_setup.py --user
 	python bootstrap.py
 	bin/buildout
